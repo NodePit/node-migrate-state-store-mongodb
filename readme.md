@@ -2,6 +2,7 @@
 
 [![Run Status](https://api.shippable.com/projects/5c015900e25f0c0700d869d4/badge?branch=master)]()
 [![Coverage Badge](https://api.shippable.com/projects/5c015900e25f0c0700d869d4/coverageBadge?branch=master)]()
+[![npm version](https://badge.fury.io/js/%40nodepit%2Fmigrate-state-store-mongodb.svg)](https://badge.fury.io/js/%40nodepit%2Fmigrate-state-store-mongodb)
 
 This is a [state storage implementation](https://github.com/tj/node-migrate#custom-state-storage) for the [`node-migrate`](https://github.com/tj/node-migrate) framework. It will store your migation state in a MongoDB collection called `migrations` which contains a single document.
 
