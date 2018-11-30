@@ -18,7 +18,7 @@ $ yarn add @nodepit/migrate-state-store-mongodb
 
 ```javascript
 import * as migrate from 'migrate';
-import { MongoStateStore } from 'migrate-state-store-mongodb';
+import { MongoStateStore } from '@nodepit/migrate-state-store-mongodb';
 
 migrate.load({
   stateStore: new MongoStateStore(MONGODB_HOST),
