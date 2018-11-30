@@ -1,5 +1,8 @@
 # node-migrate state storage for MongoDB
 
+[![Run Status](https://api.shippable.com/projects/5c015900e25f0c0700d869d4/badge?branch=master)]()
+[![Coverage Badge](https://api.shippable.com/projects/5c015900e25f0c0700d869d4/coverageBadge?branch=master)]()
+
 This is a [state storage implementation](https://github.com/tj/node-migrate#custom-state-storage) for the [`node-migrate`](https://github.com/tj/node-migrate) framework. It will store your migation state in a MongoDB collection called `migrations` which contains a single document.
 
 In case you’re using `node-migrate` for migrating your MongoDB, it makes sense to keep the state within the database itself, instead of a separate file which is used by `node-migrate` per default.
