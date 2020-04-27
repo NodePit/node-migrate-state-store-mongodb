@@ -38,7 +38,11 @@ export class MongoStateStore {
       fn(err);
     } finally {
       if (client) {
-        await client.close();
+        try {
+          await client.close();
+        } catch (err) {
+          // ignore
+        }
       }
     }
   }
