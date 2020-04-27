@@ -1,4 +1,3 @@
-import expect = require('expect.js');
 import { MongoStateStore } from '../lib/index';
 
 describe('migrate MongoDB state store', () => {
@@ -7,7 +6,7 @@ describe('migrate MongoDB state store', () => {
 
     it('can be instantiated', () => {
       const stateStore = new MongoStateStore('foo');
-      expect(stateStore).to.be.an('object');
+      expect(stateStore).toBeInstanceOf(Object);
     });
 
   });
