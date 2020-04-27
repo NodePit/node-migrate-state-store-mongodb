@@ -19,7 +19,7 @@ describe('migrate MongoDB state store', () => {
   let client: MongoClient;
 
   beforeAll(async () => {
-    client = await MongoClient.connect(mongoUrl);
+    client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true });
   });
 
   beforeEach(async () => {

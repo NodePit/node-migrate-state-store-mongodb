@@ -31,7 +31,7 @@ export class MongoStateStore {
   private async doWithErrorHandling (actionCallback: (db: Db) => Promise<void>) {
     let client: MongoClient | null = null;
     try {
-      client = await MongoClient.connect(this.mongodbHost);
+      client = await MongoClient.connect(this.mongodbHost, { useNewUrlParser: true });
       const db = client.db();
       await actionCallback(db);
     } finally {
