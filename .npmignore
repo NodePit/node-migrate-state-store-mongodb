@@ -8,9 +8,9 @@ test/
 .eslintrc.js
 .gitignore
 .prettierrc.js
-.nycrc
+jest-mongodb-config.js
+jest.config.js
 shippable.yml
 tsconfig.*
-tslint.json
 yarn-error.log
 yarn.lock
