@@ -34,7 +34,7 @@ Install NPM dependencies with `yarn`.
 
 To execute the tests, run the `test` task.
 
-For the best development experience, make sure that your editor supports [TSLint](https://palantir.github.io/tslint/usage/third-party-tools/) and [EditorConfig](http://editorconfig.org).
+For the best development experience, make sure that your editor supports [ESLint](https://eslint.org/docs/user-guide/integrations) and [EditorConfig](http://editorconfig.org).
 
 ## Releasing to NPM
 
