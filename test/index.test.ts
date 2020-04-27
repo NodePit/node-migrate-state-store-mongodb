@@ -40,8 +40,7 @@ describe('migrate MongoDB state store', () => {
   describe('errors', () => {
     it('throws error when connection fails', async done => {
       const stateStore = new MongoStateStore('invalid_url');
-      // @ts-ignore
-      stateStore.load((err, result) => {
+      stateStore.load(err => {
         expect(err).toBeInstanceOf(Error);
         done();
       });
@@ -53,7 +52,6 @@ describe('migrate MongoDB state store', () => {
       await client.db().collection(MongoStateStore.collectionName).insertOne({ ...migrationDoc });
       await client.db().collection(MongoStateStore.collectionName).insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
-      // @ts-ignore
       stateStore.load((err, result) => {
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toEqual('Expected exactly one result, but got 2');
@@ -65,7 +63,6 @@ describe('migrate MongoDB state store', () => {
 
     it('returns empty object when migration collection is empty', async done => {
       const stateStore = new MongoStateStore(mongoUrl);
-      // @ts-ignore
       stateStore.load((err, result) => {
         expect(err).toBeNull();
         expect(result).toEqual({});
@@ -76,7 +73,6 @@ describe('migrate MongoDB state store', () => {
     it('returns migrations document', async done => {
       await client.db().collection(MongoStateStore.collectionName).insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
-      // @ts-ignore
       stateStore.load((err, result) => {
         expect(err).toBeNull();
         expect(result).toMatchObject(migrationDoc);
@@ -88,8 +84,7 @@ describe('migrate MongoDB state store', () => {
   describe('saving state', () => {
     it('inserts new document into empty migrations collection', async done => {
       const stateStore = new MongoStateStore(mongoUrl);
-      // @ts-ignore
-      stateStore.save(migrationDoc, async (err, result) => {
+      stateStore.save(migrationDoc, async err => {
         expect(err).toBeUndefined();
         const docs = await client.db().collection(MongoStateStore.collectionName).find({}).toArray();
         expect(docs).toHaveLength(1);
@@ -101,8 +96,7 @@ describe('migrate MongoDB state store', () => {
     it('replaces existing document in migrations collection', async done => {
       await client.db().collection(MongoStateStore.collectionName).insertOne({});
       const stateStore = new MongoStateStore(mongoUrl);
-      // @ts-ignore
-      stateStore.save(migrationDoc, async (err, result) => {
+      stateStore.save(migrationDoc, async err => {
         expect(err).toBeUndefined();
         const docs = await client.db().collection(MongoStateStore.collectionName).find({}).toArray();
         expect(docs).toHaveLength(1);

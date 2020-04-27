@@ -6,8 +6,8 @@ export class MongoStateStore {
 
   constructor (private mongodbHost: string) { }
 
-  async load (fn: Function) {
-    this.doWithErrorHandling(fn, async db => {
+  async load (fn: (err?: any, set?: any) => void) {
+    this.doWithErrorHandling(async db => {
       const result = await db.collection(MongoStateStore.collectionName).find({}).toArray();
       if (result.length > 1) {
         return fn(new Error(`Expected exactly one result, but got ${result.length}`));
@@ -20,15 +20,15 @@ export class MongoStateStore {
     }).catch(e => fn(e));
   }
 
-  async save (set: any, fn: Function) {
-    this.doWithErrorHandling(fn, async db => {
+  async save (set: any, fn: (err?: any) => void) {
+    this.doWithErrorHandling(async db => {
       await db.collection(MongoStateStore.collectionName)
               .replaceOne({}, { migrations: set.migrations, lastRun: set.lastRun }, { upsert: true });
       fn();
     }).catch(e => fn(e));
   }
 
-  private async doWithErrorHandling (_fn: Function, actionCallback: (db: Db) => Promise<void>) {
+  private async doWithErrorHandling (actionCallback: (db: Db) => Promise<void>) {
     let client: MongoClient | null = null;
     try {
       client = await MongoClient.connect(this.mongodbHost);
