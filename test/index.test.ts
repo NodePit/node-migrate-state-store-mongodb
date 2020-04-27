@@ -64,7 +64,7 @@ describe('migrate MongoDB state store', () => {
     it('returns empty object when migration collection is empty', async done => {
       const stateStore = new MongoStateStore(mongoUrl);
       stateStore.load((err, result) => {
-        expect(err).toBeNull();
+        expect(err).toBeUndefined();
         expect(result).toEqual({});
         done();
       });
@@ -74,7 +74,7 @@ describe('migrate MongoDB state store', () => {
       await client.db().collection(MongoStateStore.collectionName).insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
       stateStore.load((err, result) => {
-        expect(err).toBeNull();
+        expect(err).toBeUndefined();
         expect(result).toMatchObject(migrationDoc);
         done();
       });
