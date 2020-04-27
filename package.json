@@ -46,5 +46,8 @@
     "url": "https://github.com/NodePit/node-migrate-state-store-mongodb/issues"
   },
   "homepage": "https://github.com/NodePit/node-migrate-state-store-mongodb#readme",
-  "description": "MongoDB-based state storage implementation for the migrate aka. node-migrate framework"
+  "description": "MongoDB-based state storage implementation for the migrate aka. node-migrate framework",
+  "engines": {
+    "node": ">=10"
+  }
 }

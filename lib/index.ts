@@ -28,7 +28,7 @@ export class MongoStateStore {
     }).catch(e => fn(e));
   }
 
-  private async doWithErrorHandling (fn: Function, actionCallback: (db: Db) => Promise<void>) {
+  private async doWithErrorHandling (_fn: Function, actionCallback: (db: Db) => Promise<void>) {
     let client: MongoClient | null = null;
     try {
       client = await MongoClient.connect(this.mongodbHost);
