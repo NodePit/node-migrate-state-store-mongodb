@@ -5,7 +5,9 @@ node_modules/
 test/
 
 .editorconfig
+.eslintrc.js
 .gitignore
+.prettierrc.js
 .nycrc
 shippable.yml
 tsconfig.*
