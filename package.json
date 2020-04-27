@@ -12,6 +12,7 @@
     "preversion": "run-s clean lint test build"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.1.5",
     "@types/jest": "^25.2.1",
     "@types/mongodb": "^3.1.28",
     "jest": "^25.4.0",
