@@ -5,5 +5,5 @@ yarn-error.log
 
 dist/
 
-.nyc_output
 coverage
+junit.xml
