@@ -16,6 +16,8 @@ $ yarn add @nodepit/migrate-state-store-mongodb
 
 ## Usage
 
+Either create a wrapper script such as `run-migrations.ts` which calls the migration API like so:
+
 ```javascript
 import * as migrate from 'migrate';
 import { MongoStateStore } from '@nodepit/migrate-state-store-mongodb';
@@ -27,6 +29,8 @@ migrate.load({
   // your code …
 });
 ```
+
+Alternatively, you can also pass the store on the `migrate` CLI using the `--store` flag. For that, create a a file which has as default export a configured subclass with a zero-arg constructor of the `MongoStateStore`. See [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/9#issuecomment-658018332) for details. You can then call `migrate up --store=./my-store.js`.
 
 ## Development
 
