@@ -35,6 +35,14 @@ describe('migrate MongoDB state store', () => {
       const stateStore = new MongoStateStore('foo');
       expect(stateStore).toBeInstanceOf(Object);
     });
+
+    it('can be instantiated with options object', () => {
+      const stateStore = new MongoStateStore({
+        uri: 'foo',
+        collectionName: 'custom_migrations'
+      });
+      expect(stateStore).toBeInstanceOf(Object);
+    });
   });
 
   describe('errors', () => {
@@ -87,6 +95,24 @@ describe('migrate MongoDB state store', () => {
         done();
       });
     });
+
+    it('returns migrations document from custom collection', async done => {
+      const customCollectionName = '__custom_migrations';
+      const customMigrationDoc = { ...migrationDoc, lastRun: `${new Date().getTime()}-my-migration.js` };
+      await client
+        .db()
+        .collection(customCollectionName)
+        .insertOne({ ...customMigrationDoc });
+      const stateStore = new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: customCollectionName
+      });
+      stateStore.load((err, result) => {
+        expect(err).toBeUndefined();
+        expect(result).toMatchObject(customMigrationDoc);
+        done();
+      });
+    });
   });
 
   describe('saving state', () => {
@@ -96,6 +122,23 @@ describe('migrate MongoDB state store', () => {
         expect(err).toBeUndefined();
         void (async (): Promise<void> => {
           const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
+          expect(docs).toHaveLength(1);
+          expect(docs[0]).toMatchObject(migrationDoc);
+          done();
+        })();
+      });
+    });
+
+    it('inserts new document into empty custom migrations collection', done => {
+      const customCollectionName = '__custom_migrations';
+      const stateStore = new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: customCollectionName
+      });
+      stateStore.save(migrationDoc, err => {
+        expect(err).toBeUndefined();
+        void (async (): Promise<void> => {
+          const docs = await client.db().collection(customCollectionName).find({}).toArray();
           expect(docs).toHaveLength(1);
           expect(docs[0]).toMatchObject(migrationDoc);
           done();

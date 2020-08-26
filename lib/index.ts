@@ -1,5 +1,9 @@
 import { MongoClient, Db } from 'mongodb';
-import { Options } from './interfaces/options.interface';
+
+interface Options {
+  uri: string;
+  collectionName?: string;
+}
 
 export class MongoStateStore {
   private readonly collectionName: string;
