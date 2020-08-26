@@ -30,6 +30,13 @@ migrate.load({
 });
 ```
 
+Per default, the migrations are stored in a collection called `migrations`. If you want to customize the collection name, instantiate the `MongoStateStore` with an object instead:
+
+
+```javascript
+new MongoStateStore({ uri: MONGODB_HOST, collectionName: 'custom-migrations-collection' });
+```
+
 Alternatively, you can also pass the store on the `migrate` CLI using the `--store` flag. For that, create a a file which has as default export a configured subclass with a zero-arg constructor of the `MongoStateStore`. See [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/9#issuecomment-658018332) for details. You can then call `migrate up --store=./my-store.js`.
 
 ## Development
