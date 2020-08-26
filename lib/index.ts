@@ -1,14 +1,23 @@
 import { MongoClient, Db } from 'mongodb';
 
-export class MongoStateStore {
-  static readonly collectionName = 'migrations';
+interface Options {
+  uri: string;
+  collectionName?: string;
+}
 
-  constructor(private mongodbHost: string) {}
+export class MongoStateStore {
+  private readonly collectionName: string;
+  private readonly mongodbHost: string;
+
+  constructor(objectOrHost: Options | string) {
+    this.mongodbHost = typeof objectOrHost === 'string' ? objectOrHost : objectOrHost.uri;
+    this.collectionName = (objectOrHost as Options).collectionName ?? 'migrations';
+  }
 
   load(fn: (err?: any, set?: any) => void): void {
     void (
       /* promise handled by fn */ this.doWithErrorHandling(fn, async db => {
-        const result = await db.collection(MongoStateStore.collectionName).find({}).toArray();
+        const result = await db.collection(this.collectionName).find({}).toArray();
         if (result.length > 1) {
           throw new Error(`Expected exactly one result, but got ${result.length}`);
         }
@@ -25,7 +34,7 @@ export class MongoStateStore {
     const { migrations, lastRun } = set;
     void (
       /* promise handled by fn */ this.doWithErrorHandling(fn, db =>
-        db.collection(MongoStateStore.collectionName).replaceOne({}, { migrations, lastRun }, { upsert: true })
+        db.collection(this.collectionName).replaceOne({}, { migrations, lastRun }, { upsert: true })
       )
     );
   }
