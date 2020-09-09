@@ -45,7 +45,7 @@ export class MongoStateStore {
   ): Promise<void> {
     let client: MongoClient | null = null;
     try {
-      client = await MongoClient.connect(this.mongodbHost, { useNewUrlParser: true });
+      client = await MongoClient.connect(this.mongodbHost, { useNewUrlParser: true, useUnifiedTopology: true });
       const db = client.db();
       const result = await actionCallback(db);
       fn(undefined, result);
