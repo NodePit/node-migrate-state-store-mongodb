@@ -132,50 +132,39 @@ describe('migrate MongoDB state store', () => {
   });
 
   describe('saving state', () => {
-    it('inserts new document into empty migrations collection', done => {
+    it('inserts new document into empty migrations collection', async () => {
       const stateStore = new MongoStateStore(mongoUrl);
-      stateStore.save(migrationDoc, err => {
-        expect(err).toBeUndefined();
-        void (async (): Promise<void> => {
-          const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
-          expect(docs).toHaveLength(1);
-          expect(docs[0]).toMatchObject(migrationDoc);
-          done();
-        })();
-      });
+      await new Promise<void>((resolve, reject) =>
+        stateStore.save(migrationDoc, err => (err ? reject(err) : resolve()))
+      );
+      const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
+      expect(docs).toHaveLength(1);
+      expect(docs[0]).toMatchObject(migrationDoc);
     });
 
-    it('inserts new document into empty custom migrations collection', done => {
+    it('inserts new document into empty custom migrations collection', async () => {
       const customCollectionName = '__custom_migrations';
       const stateStore = new MongoStateStore({
         uri: mongoUrl,
         collectionName: customCollectionName
       });
-      stateStore.save(migrationDoc, err => {
-        expect(err).toBeUndefined();
-        void (async (): Promise<void> => {
-          const docs = await client.db().collection(customCollectionName).find({}).toArray();
-          expect(docs).toHaveLength(1);
-          expect(docs[0]).toMatchObject(migrationDoc);
-          done();
-        })();
-      });
+      await new Promise<void>((resolve, reject) =>
+        stateStore.save(migrationDoc, err => (err ? reject(err) : resolve()))
+      );
+      const docs = await client.db().collection(customCollectionName).find({}).toArray();
+      expect(docs).toHaveLength(1);
+      expect(docs[0]).toMatchObject(migrationDoc);
     });
 
     it('replaces existing document in migrations collection', async () => {
       await client.db().collection(defaultCollectionName).insertOne({});
       const stateStore = new MongoStateStore(mongoUrl);
-      return new Promise<void>(resolve => {
-        stateStore.save(migrationDoc, err => {
-          expect(err).toBeUndefined();
-          void (async (): Promise<void> => {
-            const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
-            expect(docs).toHaveLength(1);
-            expect(docs[0]).toMatchObject(migrationDoc);
-            resolve();
-          })();
-        });
-      });
+      await new Promise<void>((resolve, reject) =>
+        stateStore.save(migrationDoc, err => (err ? reject(err) : resolve()))
+      );
+      const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
+      expect(docs).toHaveLength(1);
+      expect(docs[0]).toMatchObject(migrationDoc);
     });
   });
 });
