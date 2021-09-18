@@ -4,3 +4,4 @@
 # https://stackoverflow.com/a/60840108
 .eslintrc.js
 jest.config.js
+jest-mongodb-config.js
