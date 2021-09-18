@@ -1,6 +1,16 @@
 import { MongoStateStore } from '../lib/index';
 import { MongoClient } from 'mongodb';
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface Global {
+      __MONGO_URI__: string;
+      __MONGO_DB_NAME__: string;
+    }
+  }
+}
+
 describe('migrate MongoDB state store', () => {
   const migrationDoc = {
     migrations: [
@@ -14,7 +24,7 @@ describe('migrate MongoDB state store', () => {
   };
 
   const defaultCollectionName = 'migrations';
-  const mongoUrl = process.env.MONGO_URL as string;
+  const mongoUrl = `${global.__MONGO_URI__}${global.__MONGO_DB_NAME__}`;
 
   let client: MongoClient;
 
@@ -56,7 +66,7 @@ describe('migrate MongoDB state store', () => {
   });
 
   describe('loading state', () => {
-    it('throws error when migrations collection contains more than one document', async done => {
+    it('throws error when migrations collection contains more than one document', async () => {
       await client
         .db()
         .collection(defaultCollectionName)
@@ -66,11 +76,13 @@ describe('migrate MongoDB state store', () => {
         .collection(defaultCollectionName)
         .insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
-      stateStore.load((err, result) => {
-        expect(err).toBeInstanceOf(Error);
-        expect(err.message).toEqual('Expected exactly one result, but got 2');
-        expect(result).toBeUndefined();
-        done();
+      await new Promise<void>(resolve => {
+        stateStore.load((err, result) => {
+          expect(err).toBeInstanceOf(Error);
+          expect(err.message).toEqual('Expected exactly one result, but got 2');
+          expect(result).toBeUndefined();
+          resolve();
+        });
       });
     });
 
@@ -83,20 +95,22 @@ describe('migrate MongoDB state store', () => {
       });
     });
 
-    it('returns migrations document', async done => {
+    it('returns migrations document', async () => {
       await client
         .db()
         .collection(defaultCollectionName)
         .insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
-      stateStore.load((err, result) => {
-        expect(err).toBeUndefined();
-        expect(result).toMatchObject(migrationDoc);
-        done();
+      return new Promise<void>(resolve => {
+        stateStore.load((err, result) => {
+          expect(err).toBeUndefined();
+          expect(result).toMatchObject(migrationDoc);
+          resolve();
+        });
       });
     });
 
-    it('returns migrations document from custom collection', async done => {
+    it('returns migrations document from custom collection', async () => {
       const customCollectionName = '__custom_migrations';
       const customMigrationDoc = { ...migrationDoc, lastRun: `${new Date().getTime()}-my-migration.js` };
       await client
@@ -107,10 +121,12 @@ describe('migrate MongoDB state store', () => {
         uri: mongoUrl,
         collectionName: customCollectionName
       });
-      stateStore.load((err, result) => {
-        expect(err).toBeUndefined();
-        expect(result).toMatchObject(customMigrationDoc);
-        done();
+      return new Promise<void>(resolve => {
+        stateStore.load((err, result) => {
+          expect(err).toBeUndefined();
+          expect(result).toMatchObject(customMigrationDoc);
+          resolve();
+        });
       });
     });
   });
@@ -146,17 +162,19 @@ describe('migrate MongoDB state store', () => {
       });
     });
 
-    it('replaces existing document in migrations collection', async done => {
+    it('replaces existing document in migrations collection', async () => {
       await client.db().collection(defaultCollectionName).insertOne({});
       const stateStore = new MongoStateStore(mongoUrl);
-      stateStore.save(migrationDoc, err => {
-        expect(err).toBeUndefined();
-        void (async (): Promise<void> => {
-          const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
-          expect(docs).toHaveLength(1);
-          expect(docs[0]).toMatchObject(migrationDoc);
-          done();
-        })();
+      return new Promise<void>(resolve => {
+        stateStore.save(migrationDoc, err => {
+          expect(err).toBeUndefined();
+          void (async (): Promise<void> => {
+            const docs = await client.db().collection(defaultCollectionName).find({}).toArray();
+            expect(docs).toHaveLength(1);
+            expect(docs[0]).toMatchObject(migrationDoc);
+            resolve();
+          })();
+        });
       });
     });
   });
