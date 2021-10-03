@@ -6,9 +6,12 @@ node_modules/
 test/
 
 .editorconfig
+.eslintignore
 .eslintrc.js
 .gitignore
+.ncurc.js
 .prettierrc.js
+globalConfig.json
 jest-mongodb-config.js
 jest.config.js
 junit.xml
