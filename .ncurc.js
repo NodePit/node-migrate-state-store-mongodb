@@ -1,4 +1,4 @@
 module.exports = {
   upgrade: true,
-  reject: ['@types/mongodb','mongodb'],
+  reject: ['@types/mongodb', '@types/node', 'mongodb']
 };
