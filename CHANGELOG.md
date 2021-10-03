@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## unreleased
 
-### Changed
+### [3.0.0] – 2021-10-03
 - Require MongoDB NodeJS driver [v4](https://github.com/mongodb/node-mongodb-native/blob/4.1/docs/CHANGES_4.0.0.md#nodejs-version) as `peerDependency` and adapt to new API
 - Require at least NodeJS 12.9 ([according](https://github.com/mongodb/node-mongodb-native/blob/4.1/docs/CHANGES_4.0.0.md#nodejs-version) to updated MongoDB driver)
 
