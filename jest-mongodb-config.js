@@ -4,7 +4,7 @@ module.exports = {
       dbName: 'db'
     },
     binary: {
-      version: '3.4.6',
+      version: '4.2.23',
       skipMD5: true
     },
     autoStart: false
