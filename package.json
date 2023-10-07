@@ -1,6 +1,6 @@
 {
   "name": "@nodepit/migrate-state-store-mongodb",
-  "version": "3.1.0-beta.0",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
