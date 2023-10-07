@@ -37,6 +37,16 @@ Per default, the migrations are stored in a collection called `migrations`. If y
 new MongoStateStore({ uri: MONGODB_HOST, collectionName: 'custom-migrations-collection' });
 ```
 
+If you’re running in a clustered environments with more than one node, there will likely be concurrency issues when more than one node tries to run a migration (also see [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/30)). The plugin provides a locking mechanism which ensures that only one node can run migrations at a given time (and other ones will just wait until the migration has finished). For this, initialize `MongoStateStore` with a `lockCollectionName`:
+
+```javascript
+new MongoStateStore({
+  uri: MONGODB_HOST,
+  collectionName: 'migrations',
+  lockCollectionName: 'migrationlock'
+});
+```
+
 Alternatively, you can also pass the store on the `migrate` CLI using the `--store` flag. For that, create a a file which has as default export a configured subclass with a zero-arg constructor of the `MongoStateStore`. See [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/9#issuecomment-658018332) for details. You can then call `migrate up --store=./my-store.js`.
 
 ## Development
