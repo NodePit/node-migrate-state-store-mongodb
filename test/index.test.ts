@@ -1,6 +1,8 @@
 import { MongoStateStore } from '../lib/index';
 import { MongoClient } from 'mongodb';
 import { promisify } from 'util';
+import * as migrate from 'migrate';
+import path from 'path';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -217,5 +219,31 @@ describe('migrate MongoDB state store with locking', () => {
       );
     }
     await Promise.all(promises);
+  });
+
+  it('properly releases when no migrations ran', async () => {
+    const migrationOptions: migrate.MigrationOptions = {
+      stateStore: new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: collectionName,
+        lockCollectionName: lockCollectionName
+      }),
+      migrationsDirectory: path.join(__dirname, './migrations')
+    };
+
+    // 1st iteration: will run one migration
+    const set1 = await promisify(migrate.load)(migrationOptions);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    await promisify(set1.up).call(set1);
+
+    // 2nd iteration: no migration - lock is not released
+    const set2 = await promisify(migrate.load)(migrationOptions);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    await promisify(set2.up).call(set2);
+
+    // 3rd iteration: stuck with Waiting for migration lock release …
+    const set3 = await promisify(migrate.load)(migrationOptions);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    await promisify(set3.up).call(set3);
   });
 });
