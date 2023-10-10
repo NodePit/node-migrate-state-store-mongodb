@@ -37,6 +37,8 @@ Per default, the migrations are stored in a collection called `migrations`. If y
 new MongoStateStore({ uri: MONGODB_HOST, collectionName: 'custom-migrations-collection' });
 ```
 
+## Synchronization
+
 If you’re running in a clustered environments with more than one node, there will likely be concurrency issues when more than one node tries to run a migration (also see [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/30)). The plugin provides a locking mechanism which ensures that only one node can run migrations at a given time (and other ones will just wait until the migration has finished). For this, initialize `MongoStateStore` with a `lockCollectionName`:
 
 ```javascript
@@ -47,16 +49,12 @@ new MongoStateStore({
 });
 ```
 
-… then wrap the `migrate.load` function with the `lockLoadWrap` to ensure that the callback is only run on one instance at a time:
+… then use the `synchronizedUp` function instead of calling `migrate.load` and `set.up` directly to ensure that the migration is only run on one instance at a time:
 
 ```javascript
-import { MongoStateStore, lockLoadWrap } from '@nodepit/migrate-state-store-mongodb';
+import { MongoStateStore, synchronizedUp } from '@nodepit/migrate-state-store-mongodb';
 
-migrate.load({
-  stateStore: mongoStateStore
-}, (err, set) => {
-  // one instance at a time
-});
+await synchronizedUp({ stateStore: mongoStateStore });
 ```
 
 ## CLI Usage
