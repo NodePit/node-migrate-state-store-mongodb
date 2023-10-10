@@ -47,7 +47,21 @@ new MongoStateStore({
 });
 ```
 
-Alternatively, you can also pass the store on the `migrate` CLI using the `--store` flag. For that, create a a file which has as default export a configured subclass with a zero-arg constructor of the `MongoStateStore`. See [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/9#issuecomment-658018332) for details. You can then call `migrate up --store=./my-store.js`.
+… then wrap the `migrate.load` function with the `lockLoadWrap` to ensure that the callback is only run on one instance at a time:
+
+```javascript
+import { MongoStateStore, lockLoadWrap } from '@nodepit/migrate-state-store-mongodb';
+
+migrate.load({
+  stateStore: mongoStateStore
+}, (err, set) => {
+  // one instance at a time
+});
+```
+
+## CLI Usage
+
+Alternatively, you can also pass the store on the `migrate` CLI using the `--store` flag. For that, create a a file which has as default export a configured subclass with a zero-arg constructor of the `MongoStateStore`. See [here](https://github.com/NodePit/node-migrate-state-store-mongodb/issues/9#issuecomment-658018332) for details. You can then call `migrate up --store=./my-store.js`. Locking is not available in this case.
 
 ## Development
 

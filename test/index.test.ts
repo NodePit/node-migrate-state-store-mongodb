@@ -1,6 +1,7 @@
-import { MongoStateStore } from '../lib/index';
+import { MongoMigrationOptions, MongoStateStore, synchronizedMigration, synchronizedUp } from '../lib/index';
 import { MongoClient } from 'mongodb';
 import { promisify } from 'util';
+import path from 'path';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -154,6 +155,7 @@ describe('migrate MongoDB state store', () => {
 describe('migrate MongoDB state store with locking', () => {
   const collectionName = 'migrations';
   const lockCollectionName = 'migrationlock';
+  const testCollectionName = 'test';
 
   let client: MongoClient;
 
@@ -164,6 +166,7 @@ describe('migrate MongoDB state store with locking', () => {
   beforeEach(async () => {
     await client.db().collection(collectionName).deleteMany({});
     await client.db().collection(lockCollectionName).deleteMany({});
+    await client.db().collection(testCollectionName).deleteMany({});
   });
 
   afterAll(async () => {
@@ -171,51 +174,97 @@ describe('migrate MongoDB state store with locking', () => {
   });
 
   it('creates lock entry in database upon load', async () => {
-    const stateStore = new MongoStateStore({
-      uri: mongoUrl,
-      collectionName: collectionName,
-      lockCollectionName: lockCollectionName
+    const migrationOptions: MongoMigrationOptions = {
+      stateStore: new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: collectionName,
+        lockCollectionName: lockCollectionName
+      }),
+      migrationsDirectory: path.join(__dirname, './migrations')
+    };
+    let numDocsInLockCollection: number | undefined;
+    await synchronizedMigration(migrationOptions, async () => {
+      // lockCollection should have exactly one entry
+      numDocsInLockCollection = await client.db().collection(lockCollectionName).countDocuments();
     });
-    await promisify(callback => stateStore.load(callback))();
-    // lockCollection should have exactly one entry
-    const numDocsInLockCollection = await client.db().collection(lockCollectionName).countDocuments();
     expect(numDocsInLockCollection).toEqual(1);
   });
 
   it('deletes lock entry in database upon save', async () => {
-    const stateStore = new MongoStateStore({
-      uri: mongoUrl,
-      collectionName: collectionName,
-      lockCollectionName: lockCollectionName
+    const migrationOptions: MongoMigrationOptions = {
+      stateStore: new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: collectionName,
+        lockCollectionName: lockCollectionName
+      }),
+      migrationsDirectory: path.join(__dirname, './migrations')
+    };
+    await synchronizedMigration(migrationOptions, async () => {
+      // nothing to do
     });
-    await client.db().collection(lockCollectionName).insertOne({ lock: 'lock' });
-    await promisify<void>(callback => stateStore.save(migrationDoc, callback))();
     // lockCollection should have no entry
     const numDocsInLockCollection = await client.db().collection(lockCollectionName).countDocuments();
     expect(numDocsInLockCollection).toEqual(0);
   });
 
-  it('prevents executing two migrations at once', async () => {
-    const stateStore = new MongoStateStore({
-      uri: mongoUrl,
-      collectionName: collectionName,
-      lockCollectionName: lockCollectionName
-    });
-    let executing = 0;
+  it('properly releases lock when running sequentially', async () => {
+    const migrationOptions: MongoMigrationOptions = {
+      stateStore: new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: collectionName,
+        lockCollectionName: lockCollectionName
+      }),
+      migrationsDirectory: path.join(__dirname, './migrations')
+    };
+
+    for (let i = 0; i < 10; i++) {
+      await synchronizedUp(migrationOptions);
+    }
+
+    const docsInTestCollection = await client.db().collection(testCollectionName).find({}).toArray();
+    expect(docsInTestCollection).toHaveLength(1);
+  });
+
+  it('properly releases lock when running in parallel', async () => {
+    const migrationOptions: MongoMigrationOptions = {
+      stateStore: new MongoStateStore({
+        uri: mongoUrl,
+        collectionName: collectionName,
+        lockCollectionName: lockCollectionName
+      }),
+      migrationsDirectory: path.join(__dirname, './migrations')
+    };
+
     const promises: Promise<void>[] = [];
+
     // simulate ten nodes
     for (let i = 0; i < 10; i++) {
-      promises.push(
-        (async () => {
-          await promisify(callback => stateStore.load(callback))();
-          executing++;
-          expect(executing).toEqual(1);
-          await promisify(setTimeout)(100);
-          await promisify<void>(callback => stateStore.save(migrationDoc, callback))();
-          executing--;
-        })()
-      );
+      promises.push(synchronizedUp(migrationOptions));
     }
+
     await Promise.all(promises);
+
+    const docsInTestCollection = await client.db().collection(testCollectionName).find({}).toArray();
+    expect(docsInTestCollection).toHaveLength(1);
+  });
+});
+
+describe('parameter validation', () => {
+  it('throws if migration opts has no stateStore', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    await expect(() => synchronizedMigration({} as any, () => Promise.resolve())).rejects.toThrow(
+      'No `stateStore` in migration options'
+    );
+  });
+  it('throws if stateStore is not a MongoStateStore', async () => {
+    await expect(() =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      synchronizedMigration({ stateStore: 'migrations' } as any, () => Promise.resolve())
+    ).rejects.toThrow('Given `stateStore` is not `MongoStateStore`');
+  });
+  it('throws if lockCollectionName is not set', async () => {
+    await expect(() =>
+      synchronizedMigration({ stateStore: new MongoStateStore(mongoUrl) }, () => Promise.resolve())
+    ).rejects.toThrow('`lockCollectionName` in MongoStateStore is not set');
   });
 });
