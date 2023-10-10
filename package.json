@@ -33,7 +33,8 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "mongodb": "^5.0.0"
+    "mongodb": "^5.0.0",
+    "migrate": "^2.0.0"
   },
   "directories": {
     "lib": "lib",
