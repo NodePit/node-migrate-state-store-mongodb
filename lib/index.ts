@@ -61,7 +61,6 @@ export class MongoStateStore {
  * Example usage:
  *
  * ```
- * // ** wrap the `load` with `lockLoadWrap` **
  * await synchronizedMigration({
  *   stateStore: new MongoStateStore({
  *     uri: 'mongodb://localhost/db',
