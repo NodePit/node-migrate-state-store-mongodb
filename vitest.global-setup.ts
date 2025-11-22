@@ -17,9 +17,6 @@ export async function setup(project: TestProject) {
       // https://github.com/nodkz/mongodb-memory-server/issues/78
       // storageEngine: 'wiredTiger'
       storageEngine: 'ephemeralForTest'
-    },
-    binary: {
-      version: '4.2.23'
     }
   });
   // @ts-ignore
