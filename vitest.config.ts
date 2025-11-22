@@ -7,7 +7,8 @@ export default defineConfig({
     setupFiles: './vitest.setup.ts',
     pool: 'threads',
     coverage: {
-      provider: 'v8'
+      provider: 'v8',
+      exclude: ['**/test/migrations/**']
     },
     reporters: ['default', 'junit']
   }
