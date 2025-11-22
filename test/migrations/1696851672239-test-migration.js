@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const { callbackify } = require('util');
 const { MongoClient } = require('mongodb');
@@ -18,8 +18,8 @@ module.exports.up = function (next) {
       await client?.close();
     }
   })(next);
-}
+};
 
 module.exports.down = function (next) {
-  next()
-}
+  next();
+};
