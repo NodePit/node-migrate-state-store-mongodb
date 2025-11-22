@@ -6,11 +6,10 @@ node_modules/
 test/
 
 .editorconfig
-.eslintignore
-.eslintrc.js
 .gitignore
 .ncurc.js
 .prettierrc.js
+eslint.config.mjs
 globalConfig.json
 junit.xml
 tsconfig.*
