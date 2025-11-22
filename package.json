@@ -53,7 +53,7 @@
   "homepage": "https://github.com/NodePit/node-migrate-state-store-mongodb#readme",
   "description": "MongoDB-based state storage implementation for the migrate aka. node-migrate framework",
   "engines": {
-    "node": ">=14.20.1"
+    "node": ">=20"
   },
   "volta": {
     "node": "20.19.5",
