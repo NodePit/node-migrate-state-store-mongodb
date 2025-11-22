@@ -88,4 +88,4 @@ Pull requests are very welcome. Feel free to discuss bugs or new features by ope
 
 - - -
 
-Copyright [nodepit.com](https://nodepit.com), 2018 – 2023.
+Copyright [nodepit.com](https://nodepit.com), 2018 – 2025.
