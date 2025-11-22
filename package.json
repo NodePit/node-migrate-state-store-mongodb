@@ -5,32 +5,29 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .ts ./lib ./test",
+    "test": "vitest",
+    "lint": "eslint ./lib ./test",
     "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf ./.nyc_output ./coverage ./dist",
     "preversion": "run-s clean lint test build"
   },
   "devDependencies": {
-    "@shelf/jest-mongodb": "^4.3.2",
-    "@types/jest": "^29.5.12",
+    "@eslint/js": "^9.39.1",
     "@types/node": "^14",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
-    "eslint": "^8.52.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "jest": "^29.7.0",
-    "jest-environment-node": "^29.7.0",
-    "jest-junit": "^16.0.0",
+    "@vitest/coverage-v8": "^4.0.13",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
     "migrate": "^2.1.0",
     "mongodb": "^6.8.0",
+    "mongodb-memory-server-global": "^9.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
     "rimraf": "^5.0.5",
-    "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.47.0",
+    "vitest": "^4.0.13"
   },
   "peerDependencies": {
     "migrate": "^2.0.0",
@@ -56,6 +53,10 @@
   "homepage": "https://github.com/NodePit/node-migrate-state-store-mongodb#readme",
   "description": "MongoDB-based state storage implementation for the migrate aka. node-migrate framework",
   "engines": {
-    "node": ">=14.20.1"
+    "node": ">=20"
+  },
+  "volta": {
+    "node": "20.19.5",
+    "yarn": "1.22.19"
   }
 }

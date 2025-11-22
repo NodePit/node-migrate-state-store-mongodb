@@ -1,17 +1,8 @@
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import { MongoMigrationOptions, MongoStateStore, synchronizedMigration, synchronizedUp } from '../lib/index';
 import { MongoClient } from 'mongodb';
 import { promisify } from 'util';
 import path from 'path';
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface Global {
-      __MONGO_URI__: string;
-      __MONGO_DB_NAME__: string;
-    }
-  }
-}
 
 const migrationDoc = {
   migrations: [
@@ -24,7 +15,7 @@ const migrationDoc = {
   lastRun: '1587915479438-my-migration.js'
 };
 
-const mongoUrl = `${global.__MONGO_URI__}${global.__MONGO_DB_NAME__}`;
+const mongoUrl = process.env.MONGO_URL as string;
 
 describe('migrate MongoDB state store', () => {
   const defaultCollectionName = 'migrations';
@@ -36,7 +27,7 @@ describe('migrate MongoDB state store', () => {
   });
 
   beforeEach(async () => {
-    await client.db().collection(defaultCollectionName).deleteMany({});
+    await cleanAllCollections(client);
   });
 
   afterAll(async () => {
@@ -59,12 +50,9 @@ describe('migrate MongoDB state store', () => {
   });
 
   describe('errors', () => {
-    it('throws error when connection fails', done => {
+    it('throws error when connection fails', async () => {
       const stateStore = new MongoStateStore('invalid_url');
-      stateStore.load(err => {
-        expect(err).toBeInstanceOf(Error);
-        done();
-      });
+      await expect(() => promisify<void>(callback => stateStore.load(callback))()).rejects.toThrowError();
     });
   });
 
@@ -79,13 +67,9 @@ describe('migrate MongoDB state store', () => {
         .collection(defaultCollectionName)
         .insertOne({ ...migrationDoc });
       const stateStore = new MongoStateStore(mongoUrl);
-      try {
-        await promisify<any>(callback => stateStore.load(callback))();
-        expect(false).toEqual(true);
-      } catch (err) {
-        expect(err).toBeInstanceOf(Error);
-        expect((err as Error).message).toEqual('Expected exactly one result, but got 2');
-      }
+      await expect(() => promisify<void>(callback => stateStore.load(callback))()).rejects.toThrow(
+        'Expected exactly one result, but got 2'
+      );
     });
 
     it('returns empty object when migration collection is empty', async () => {
@@ -164,9 +148,7 @@ describe('migrate MongoDB state store with locking', () => {
   });
 
   beforeEach(async () => {
-    await client.db().collection(collectionName).deleteMany({});
-    await client.db().collection(lockCollectionName).deleteMany({});
-    await client.db().collection(testCollectionName).deleteMany({});
+    await cleanAllCollections(client);
   });
 
   afterAll(async () => {
@@ -268,3 +250,15 @@ describe('parameter validation', () => {
     ).rejects.toThrow('`lockCollectionName` in MongoStateStore is not set');
   });
 });
+
+async function cleanAllCollections(client: MongoClient): Promise<void> {
+  const collections = await client.db().collections();
+  const cleanupPromises = Object.values(collections).map(async collection => {
+    try {
+      await collection.deleteMany({});
+    } catch {
+      // Ignore errors - collection might not exist
+    }
+  });
+  await Promise.all(cleanupPromises);
+}

@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 const { callbackify } = require('util');
 const { MongoClient } = require('mongodb');
 const { promisify } = require('util');
 
-const mongoUrl = `${global.__MONGO_URI__}${global.__MONGO_DB_NAME__}`;
+const mongoUrl = process.env.MONGO_URL;
 
 module.exports.up = function (next) {
   callbackify(async () => {
@@ -18,8 +18,8 @@ module.exports.up = function (next) {
       await client?.close();
     }
   })(next);
-}
+};
 
 module.exports.down = function (next) {
-  next()
-}
+  next();
+};
