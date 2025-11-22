@@ -255,7 +255,7 @@ async function cleanAllCollections(client: MongoClient): Promise<void> {
   const collections = await client.db().collections();
   const cleanupPromises = Object.values(collections).map(async collection => {
     try {
-      await collection.deleteMany();
+      await collection.deleteMany({});
     } catch {
       // Ignore errors - collection might not exist
     }
