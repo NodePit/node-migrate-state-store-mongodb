@@ -5,6 +5,10 @@ export default defineConfig({
     environment: 'node',
     globalSetup: './vitest.global-setup.ts',
     setupFiles: './vitest.setup.ts',
-    pool: 'threads'
+    pool: 'threads',
+    coverage: {
+      provider: 'v8'
+    },
+    reporters: ['default', 'junit']
   }
 });
