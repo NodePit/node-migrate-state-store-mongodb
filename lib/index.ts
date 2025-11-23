@@ -27,28 +27,24 @@ export class MongoStateStore {
   }
 
   load(fn: (err?: any, set?: any) => void): void {
-    callbackify<any>(() => {
-      return dbRequest(this.mongodbHost, async db => {
-        const result = await db.collection(this.collectionName).find({}).toArray();
-        if (result.length > 1) {
-          throw new Error(`Expected exactly one result, but got ${result.length}`);
-        }
-        if (result.length === 0) {
-          console.log('No migrations found, probably running the very first time');
-          return {};
-        }
-        return result[0];
-      });
-    })(fn);
+    dbRequestCallback(fn, this.mongodbHost, async db => {
+      const result = await db.collection(this.collectionName).find({}).toArray();
+      if (result.length > 1) {
+        throw new Error(`Expected exactly one result, but got ${result.length}`);
+      }
+      if (result.length === 0) {
+        console.log('No migrations found, probably running the very first time');
+        return {};
+      }
+      return result[0];
+    });
   }
 
   save(set: any, fn: (err?: any) => void): void {
     const { migrations, lastRun } = set;
-    callbackify<void>(() =>
-      dbRequest(this.mongodbHost, async db => {
-        await db.collection(this.collectionName).replaceOne({}, { migrations, lastRun }, { upsert: true });
-      })
-    )(fn);
+    dbRequestCallback(fn, this.mongodbHost, db =>
+      db.collection(this.collectionName).replaceOne({}, { migrations, lastRun }, { upsert: true })
+    );
   }
 }
 
@@ -106,7 +102,8 @@ export async function synchronizedUp(opts: MongoMigrationOptions): Promise<void>
   await synchronizedMigration(opts, async loadedSet => promisify(loadedSet.up).call(loadedSet));
 }
 
-async function dbRequest<T>(url: string, callback: (db: Db) => T | Promise<T>): Promise<T> {
+/** Promised-based wrapper around a DB request which properly handles connect and close. */
+async function dbRequest<T>(url: string, callback: (db: Db) => Promise<T>): Promise<T> {
   let client: MongoClient | undefined;
   try {
     client = await MongoClient.connect(url);
@@ -115,6 +112,15 @@ async function dbRequest<T>(url: string, callback: (db: Db) => T | Promise<T>): 
   } finally {
     await client?.close();
   }
+}
+
+/** Callback-based wrapper around a DB request which properly handles connect and close. */
+function dbRequestCallback<T>(
+  callback: (err: NodeJS.ErrnoException | null, result: T) => void,
+  url: string,
+  dbCallback: (db: Db) => Promise<T>
+): void {
+  callbackify(dbRequest)(url, dbCallback, callback);
 }
 
 async function acquireLock(url: string, lockCollectionName: string): Promise<void> {
