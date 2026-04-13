@@ -12,12 +12,12 @@
     "preversion": "run-s clean lint test build"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^20",
     "@vitest/coverage-v8": "^4.1.4",
-    "eslint": "9.39.1",
+    "eslint": "10.2.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-prettier": "5.5.5",
     "migrate": "^2.1.0",
     "mongodb": "^6.8.0",
     "mongodb-memory-server-global": "^9.2.0",
