@@ -22,16 +22,18 @@ Either create a wrapper script such as `run-migrations.ts` which calls the migra
 import * as migrate from 'migrate';
 import { MongoStateStore } from '@nodepit/migrate-state-store-mongodb';
 
-migrate.load({
-  stateStore: new MongoStateStore(MONGODB_HOST),
-  // further configuration …
-}, (err, set) => {
-  // your code …
-});
+migrate.load(
+  {
+    stateStore: new MongoStateStore(MONGODB_HOST)
+    // further configuration …
+  },
+  (err, set) => {
+    // your code …
+  }
+);
 ```
 
 Per default, the migrations are stored in a collection called `migrations`. If you want to customize the collection name, instantiate the `MongoStateStore` with an object instead:
-
 
 ```javascript
 new MongoStateStore({ uri: MONGODB_HOST, collectionName: 'custom-migrations-collection' });
@@ -86,11 +88,10 @@ $ pnpm publish --access public
 
 … where `<update_type>` is one of `patch`, `minor`, or `major`. This will update the `package.json`, and create a tagged Git commit with the version number.
 
-
 ## Contributing
 
 Pull requests are very welcome. Feel free to discuss bugs or new features by opening a new [issue](https://github.com/NodePit/node-migrate-state-store-mongodb/issues).
 
-- - -
+---
 
 Copyright [nodepit.com](https://nodepit.com), 2018 – 2025.
