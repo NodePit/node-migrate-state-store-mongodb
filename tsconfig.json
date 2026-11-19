@@ -3,10 +3,10 @@
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
     "target": "es2022",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
-    "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "module": "node20",                       /* Emits CommonJS, as package.json has no `type`. Unlike `commonjs`, resolves through `exports` maps and allows importing ES modules such as vitest, as Node.js 22 does. */
     "lib": ["ES2023"],                        /* Specify library files to be included in the compilation. */
-    "allowJs": false,                         /* Allow javascript files to be compiled. */
-    // "checkJs": true,                       /* Report errors in .js files. */
+    "allowJs": true,                          /* `eslint.config.mjs` is in `include`. */
+    "checkJs": true,                          /* Otherwise the above only parses it. */
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "declaration": true,                      /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
@@ -17,7 +17,7 @@
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
     // "removeComments": true,                /* Do not emit comments to output. */
-    // "noEmit": true,                        /* Do not emit outputs. */
+    "noEmit": true,                           /* Type-checking only; tsconfig.build.json emits. */
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
@@ -37,8 +37,9 @@
     // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
-    // "types": [],                           /* Type declaration files to be included in compilation. */
+    "types": ["node"],                        /* Type declaration files to be included in compilation. */
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    "skipLibCheck": true,                     /* mongodb-memory-server-core’s declarations import `semver` without depending on its types. */
     "esModuleInterop": true                   /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
     // "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
@@ -55,6 +56,10 @@
   },
   "include": [
     "lib",
-    "test"
+    "test",
+    "eslint.config.mjs",
+    "vitest.config.ts",
+    "vitest.global-setup.ts",
+    "vitest.setup.ts"
   ]
 }

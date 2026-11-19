@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "test": "vitest",
-    "lint": "eslint ./lib ./test",
+    "lint": "pnpm run lint:eslint && pnpm run lint:types",
+    "lint:eslint": "eslint ./lib ./test",
+    "lint:types": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node -e \"['./coverage', './dist'].forEach(entry => require('fs').rmSync(entry, { recursive: true, force: true }));\"",
     "preversion": "pnpm run clean && pnpm run lint && pnpm test && pnpm run build"
@@ -22,7 +24,7 @@
     "mongodb": "^6.8.0",
     "mongodb-memory-server-global": "^9.2.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.58.1",
     "vitest": "^4.1.11"
   },
