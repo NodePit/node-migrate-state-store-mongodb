@@ -30,5 +30,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["lib", "test", "eslint.config.mjs", "vitest.config.ts", "vitest.global-setup.ts", "vitest.setup.ts"]
+  "include": [
+    "lib",
+    "test",
+    "eslint.config.mjs",
+    "knip.config.ts",
+    "vitest.config.ts",
+    "vitest.global-setup.ts",
+    "vitest.setup.ts"
+  ]
 }
