@@ -30,6 +30,9 @@
     "noUnusedParameters": true,               /* Report errors on unused parameters. */
     "noImplicitReturns": true,                /* Report error when not all code paths in function return a value. */
     "noFallthroughCasesInSwitch": true,       /* Report errors for fallthrough cases in switch statement. */
+    "noImplicitOverride": true,               /* Require `override` on members that override a base class member. */
+    "noUncheckedIndexedAccess": true,         /* Include `undefined` in the type of index access. */
+    "exactOptionalPropertyTypes": true,       /* Distinguish an absent optional property from one set to `undefined`. */
 
     /* Module Resolution Options */
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */

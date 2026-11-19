@@ -4,13 +4,13 @@ import { callbackify, promisify } from 'util';
 
 interface Options {
   uri: string;
-  collectionName?: string;
+  collectionName?: string | undefined;
   /** Optionally specify a collection to use for locking. This is intended for
    * clusters with multiple nodes to ensure that not more than one migration
    * can run at any given time. You must use the `synchronizedMigration` or
    * `synchronizedUp` function, instead of triggering the migration via
    * `migrate` directly. */
-  lockCollectionName?: string;
+  lockCollectionName?: string | undefined;
 }
 
 export type MongoMigrationOptions = migrate.MigrationOptions & { stateStore: MongoStateStore };
@@ -18,7 +18,7 @@ export type MongoMigrationOptions = migrate.MigrationOptions & { stateStore: Mon
 export class MongoStateStore {
   private readonly collectionName: string;
   readonly mongodbHost: string;
-  readonly lockCollectionName?: string;
+  readonly lockCollectionName?: string | undefined;
 
   constructor(objectOrHost: Options | string) {
     this.mongodbHost = typeof objectOrHost === 'string' ? objectOrHost : objectOrHost.uri;
