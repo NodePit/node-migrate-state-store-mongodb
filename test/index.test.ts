@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import { MongoMigrationOptions, MongoStateStore, synchronizedMigration, synchronizedUp } from '../lib/index';
 import { MongoClient } from 'mongodb';
-import { promisify } from 'util';
-import path from 'path';
+import { promisify } from 'node:util';
+import path from 'node:path';
 
 const migrationDoc = {
   migrations: [
@@ -52,7 +52,7 @@ describe('migrate MongoDB state store', () => {
   describe('errors', () => {
     it('throws error when connection fails', async () => {
       const stateStore = new MongoStateStore('invalid_url');
-      await expect(() => promisify<void>(callback => stateStore.load(callback))()).rejects.toThrowError();
+      await expect(() => promisify<void>(callback => stateStore.load(callback))()).rejects.toThrow();
     });
   });
 

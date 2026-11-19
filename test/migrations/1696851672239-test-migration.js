@@ -1,8 +1,8 @@
 'use strict';
 
-const { callbackify } = require('util');
 const { MongoClient } = require('mongodb');
-const { promisify } = require('util');
+const { setTimeout } = require('node:timers/promises');
+const { callbackify } = require('node:util');
 
 const mongoUrl = /** @type {string} */ (process.env.MONGO_URL);
 
@@ -12,7 +12,7 @@ const mongoUrl = /** @type {string} */ (process.env.MONGO_URL);
 module.exports.up = function (next) {
   callbackify(async () => {
     const sleepMs = Math.floor(Math.random() * 2000);
-    await promisify(setTimeout)(sleepMs);
+    await setTimeout(sleepMs);
     let client;
     try {
       client = await MongoClient.connect(mongoUrl);
