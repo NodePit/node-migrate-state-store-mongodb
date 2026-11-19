@@ -1,0 +1,4 @@
+# Packages allowed to run install scripts. pnpm blocks all others.
+allowBuilds:
+  # downloads the MongoDB binary that the tests run against
+  mongodb-memory-server-global: true

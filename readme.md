@@ -11,7 +11,7 @@ In case you’re using `node-migrate` for migrating your MongoDB, it makes sense
 ## Installation
 
 ```shell
-$ yarn add @nodepit/migrate-state-store-mongodb
+$ npm install @nodepit/migrate-state-store-mongodb
 ```
 
 ## Usage
@@ -63,7 +63,7 @@ Alternatively, you can also pass the store on the `migrate` CLI using the `--sto
 
 ## Development
 
-Install NPM dependencies with `yarn`.
+Install dependencies with `pnpm install`. pnpm downloads the Node.js version pinned in `devEngines` and uses it for every `pnpm run` and `pnpm exec`. Use `pnpm exec` instead of `npx`: npm rejects a Node.js version that differs from the pin.
 
 To execute the tests, run the `test` task.
 
@@ -74,9 +74,9 @@ For the best development experience, make sure that your editor supports [ESLint
 Commit all changes and run the following:
 
 ```shell
-$ npm login
-$ npm version <update_type>
-$ npm publish --access public
+$ pnpm login
+$ pnpm version <update_type>
+$ pnpm publish --access public
 ```
 
 … where `<update_type>` is one of `patch`, `minor`, or `major`. This will update the `package.json`, and create a tagged Git commit with the version number.

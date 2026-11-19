@@ -9,7 +9,7 @@
     "lint": "eslint ./lib ./test",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node -e \"['./coverage', './dist'].forEach(entry => require('fs').rmSync(entry, { recursive: true, force: true }));\"",
-    "preversion": "yarn clean && yarn lint && yarn test && yarn build"
+    "preversion": "pnpm run clean && pnpm run lint && pnpm test && pnpm run build"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -52,8 +52,12 @@
   "engines": {
     "node": ">=22"
   },
-  "volta": {
-    "node": "22.23.5",
-    "yarn": "1.22.19"
-  }
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.23.5",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.28.13"
 }
