@@ -67,6 +67,11 @@ Install dependencies with `pnpm install`. pnpm downloads the Node.js version pin
 
 To execute the tests, run the `test` task.
 
+To update dependencies, run `pnpm outdated` to see what’s behind, and `pnpm update -i --latest` to choose updates. Two are held back on purpose:
+
+- `mongodb` stays within the major versions listed in `peerDependencies`. To support a new major version, add it there first.
+- `@types/node` stays on the major version in `engines.node`, so the code can’t use APIs that the oldest supported Node.js lacks.
+
 For the best development experience, make sure that your editor supports [ESLint](https://eslint.org/docs/user-guide/integrations) and [EditorConfig](http://editorconfig.org).
 
 ## Releasing to NPM
