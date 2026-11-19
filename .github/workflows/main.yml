@@ -1,31 +1,45 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # the oldest supported version (engines.node) and every newer one
+        node-version: [22, 24, 26]
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v7
         with:
-          # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
 
-      - name: Lint, test, and build
-        run: |
-          npm install -g yarn
-          yarn install
-          yarn lint
-          yarn run test --coverage
-          yarn build
-
-      - uses: codecov/codecov-action@v4.0.0
+      # reads the version from packageManager in package.json
+      - uses: pnpm/action-setup@v6
         with:
-          file: ./coverage/coverage-final.json
+          cache: true
+
+      # --no-runtime: use the Node.js version of the matrix, not devEngines.runtime
+      - run: pnpm install --frozen-lockfile --no-runtime
+
+      - run: pnpm exec node --version
+
+      - run: pnpm run lint
+
+      - run: pnpm test --coverage
+
+      - run: pnpm run build
+
+      - uses: codecov/codecov-action@v7
+        if: matrix.node-version == 22
+        with:
+          files: ./coverage/coverage-final.json
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
