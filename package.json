@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@vitest/coverage-v8": "^4.1.4",
     "eslint": "10.2.0",
     "eslint-config-prettier": "10.1.8",
@@ -50,10 +50,10 @@
   "homepage": "https://github.com/NodePit/node-migrate-state-store-mongodb#readme",
   "description": "MongoDB-based state storage implementation for the migrate aka. node-migrate framework",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "volta": {
-    "node": "20.19.5",
+    "node": "22.23.5",
     "yarn": "1.22.19"
   }
 }
