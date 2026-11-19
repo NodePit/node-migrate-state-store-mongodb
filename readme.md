@@ -67,14 +67,14 @@ Alternatively, you can also pass the store on the `migrate` CLI using the `--sto
 
 Install dependencies with `pnpm install`. pnpm downloads the Node.js version pinned in `devEngines` and uses it for every `pnpm run` and `pnpm exec`. Use `pnpm exec` instead of `npx`: npm rejects a Node.js version that differs from the pin.
 
-To execute the tests, run the `test` task.
+To run the tests, run `pnpm test`. To check linting, formatting and types, run `pnpm run lint`.
 
 To update dependencies, run `pnpm outdated` to see what’s behind, and `pnpm update -i --latest` to choose updates. Two are held back on purpose:
 
 - `mongodb` stays within the major versions listed in `peerDependencies`. To support a new major version, add it there first.
 - `@types/node` stays on the major version in `engines.node`, so the code can’t use APIs that the oldest supported Node.js lacks.
 
-For the best development experience, make sure that your editor supports [ESLint](https://eslint.org/docs/user-guide/integrations) and [EditorConfig](http://editorconfig.org).
+For the best development experience, make sure that your editor supports [ESLint](https://eslint.org/docs/user-guide/integrations), [Prettier](https://prettier.io/docs/editors) and [EditorConfig](https://editorconfig.org). The repository includes settings for VS Code: it formats on save, and offers to use the TypeScript version from `devDependencies`. Accept that once, so the editor reports the same errors as `pnpm run lint`.
 
 ## Releasing to NPM
 
