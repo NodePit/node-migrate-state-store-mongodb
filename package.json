@@ -13,7 +13,8 @@
     "lint:types": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node -e \"['./coverage', './dist'].forEach(entry => require('fs').rmSync(entry, { recursive: true, force: true }));\"",
-    "preversion": "pnpm run clean && pnpm run lint && pnpm test && pnpm run build"
+    "preversion": "pnpm run clean && pnpm run lint && pnpm test && pnpm run build",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -23,7 +24,9 @@
     "eslint": "10.2.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-n": "^18.5.0",
+    "husky": "^9.1.7",
     "knip": "^6.46.1",
+    "lint-staged": "^17.6.1",
     "migrate": "^2.1.0",
     "mongodb": "^6.8.0",
     "mongodb-memory-server-global": "^9.2.0",
