@@ -5,6 +5,11 @@ on:
     branches: [master]
   pull_request:
 
+# The repository default is write. The workflow only reads, so a compromised
+# action can’t push with this token.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,8 +25,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # reads the version from packageManager in package.json
-      - uses: pnpm/action-setup@v6
+      # Reads the version from packageManager in package.json. Third-party
+      # actions are pinned to a commit, so a moved tag can’t change what runs;
+      # Dependabot updates the pins.
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         with:
           cache: true
 
@@ -36,7 +43,7 @@ jobs:
 
       - run: pnpm run build
 
-      - uses: codecov/codecov-action@v7
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         if: matrix.node-version == 22
         with:
           files: ./coverage/coverage-final.json
