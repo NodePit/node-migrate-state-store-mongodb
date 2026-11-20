@@ -78,15 +78,20 @@ For the best development experience, make sure that your editor supports [ESLint
 
 ## Releasing to NPM
 
-Commit all changes and run the following:
+First promote the changelog by hand: move the entries under `## [Unreleased]` in `CHANGELOG.md` to a new `## [X.Y.Z] - YYYY-MM-DD` section below an empty `## [Unreleased]`, repoint the `[unreleased]` link reference at the new tag, and add a comparison link for the release. Commit that on its own, so the wording, grouping and date get reviewed.
+
+Then run the following:
 
 ```shell
 $ pnpm login
 $ pnpm version <update_type>
+$ git push --follow-tags
 $ pnpm publish --access public
 ```
 
-… where `<update_type>` is one of `patch`, `minor`, or `major`. This will update the `package.json`, and create a tagged Git commit with the version number.
+… where `<update_type>` is one of `patch`, `minor`, or `major`. This will update the `package.json`, and create a tagged Git commit with the version number. `--follow-tags` pushes that tag, which the changelog’s comparison links point at.
+
+The release refuses to run unless the changelog is ready. [changelog-keeper](https://github.com/qqilihq/changelog-keeper) checks it and never modifies it: `pnpm run lint` (and so `preversion`) checks its structure and link references, and the `version` script, which runs after the bump, verifies that the newest release is that version, has entries, and that nothing is left under `[Unreleased]`. When it fails, it restores `package.json`, so the bump is undone, and its messages spell out the lines to write. Release headings use a plain hyphen, and `### Breaking` is accepted alongside the six Keep a Changelog section types.
 
 ## Contributing
 

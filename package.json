@@ -6,18 +6,21 @@
   "license": "MIT",
   "scripts": {
     "test": "vitest run",
-    "lint": "pnpm run lint:eslint && pnpm run lint:format && pnpm run lint:knip && pnpm run lint:types",
+    "lint": "pnpm run lint:eslint && pnpm run lint:format && pnpm run lint:knip && pnpm run lint:types && pnpm run lint:changelog",
     "lint:eslint": "eslint .",
     "lint:format": "prettier --check .",
     "lint:knip": "knip",
     "lint:types": "tsc --noEmit",
+    "lint:changelog": "changelog-keeper lint --section-types Added,Changed,Deprecated,Removed,Fixed,Security,Breaking",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node -e \"['./coverage', './dist'].forEach(entry => require('fs').rmSync(entry, { recursive: true, force: true }));\"",
     "preversion": "pnpm run clean && pnpm run lint && pnpm test && pnpm run build",
+    "version": "changelog-keeper verify --section-types Added,Changed,Deprecated,Removed,Fixed,Security,Breaking || (git checkout -- package.json && exit 1)",
     "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@qqilihq/changelog-keeper": "0.1.0-beta.3",
     "@types/node": "^22",
     "@vitest/coverage-v8": "^4.1.11",
     "@vitest/eslint-plugin": "^1.6.28",

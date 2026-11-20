@@ -5,57 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## unreleased
+## [Unreleased]
 
 ### Breaking
 
 - Require at least Node.js 22
 
-## [5.1.0] – 2023-11-02
+## [5.1.0] - 2023-11-02
 
 ### Changed
 
 - Also works with MongoDB driver v6
 
-## [5.0.0] – 2023-10-10
+## [5.0.0] - 2023-10-10
 
 ### Fixed
 
 - Fixed migration lock - this requires a code change; see `synchronizedUp` in the readme.
 
-## [4.0.0] – 2023-10-07
+## [4.0.0] - 2023-10-07
 
 ### Changed
 
 - Require MongoDB NodeJS driver [v5](https://github.com/mongodb/node-mongodb-native/releases/tag/v5.0.0) as `peerDependency`
 - Require at least NodeJS 14.20.1 ([according](https://github.com/mongodb/node-mongodb-native/pull/3496) to updated MongoDB driver)
 
-## [3.1.0-beta.0] – 2022-03-30
+## [3.1.0-beta.0] - 2022-03-30
 
 ### Added
 
 - Add lock mechanism to prevent running migrations simulataneously in clustered environments.
 
-## [3.0.0] – 2021-10-03
+## [3.0.0] - 2021-10-03
 
 ### Changed
 
 - Require MongoDB NodeJS driver [v4](https://github.com/mongodb/node-mongodb-native/blob/4.1/docs/CHANGES_4.0.0.md#nodejs-version) as `peerDependency` and adapt to new API
 - Require at least NodeJS 12.9 ([according](https://github.com/mongodb/node-mongodb-native/blob/4.1/docs/CHANGES_4.0.0.md#nodejs-version) to updated MongoDB driver)
 
-## [2.1.1] – 2020-09-09
+## [2.1.1] - 2020-09-09
 
 ### Fixed
 
 - Set `useUnifiedTopology` flag to avoid deprecation warning
 
-## [2.1.0] – 2020-08-26
+## [2.1.0] - 2020-08-26
 
 ### Added
 
 - Allow to specify collection name for migrations state (kudos to [Dante Calderón](https://github.com/dantehemerson)) by instantiating the store with a configuration object
 
-## [2.0.0] – 2020-04-28
+## [2.0.0] - 2020-04-28
 
 ### Changed
 
@@ -67,12 +67,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Comprehensive test suite
 
-## [1.0.4] – 2020-01-04
+## [1.0.4] - 2020-01-04
 
-## [1.0.3] – 2019-11-11
+## [1.0.3] - 2019-11-11
 
-## [1.0.2] – 2019-07-06
+## [1.0.2] - 2019-07-06
 
-## [1.0.1] – 2018-11-30
+## [1.0.1] - 2018-11-30
 
-## [1.0.0] – 2018-11-30
+## [1.0.0] - 2018-11-30
+
+[unreleased]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v5.1.0...HEAD
+[5.1.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v5.0.0...v5.1.0
+[5.0.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v4.0.0...v5.0.0
+[4.0.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v3.1.0-beta.0...v4.0.0
+[3.1.0-beta.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v3.0.0...v3.1.0-beta.0
+[3.0.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v2.1.1...v3.0.0
+[2.1.1]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v1.0.4...v2.0.0
+[1.0.4]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/NodePit/node-migrate-state-store-mongodb/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/NodePit/node-migrate-state-store-mongodb/releases/tag/v1.0.0
