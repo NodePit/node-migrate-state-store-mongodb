@@ -1,16 +1,17 @@
 import * as migrate from 'migrate';
 import { MongoClient, Db } from 'mongodb';
-import { callbackify, promisify } from 'util';
+import { setTimeout } from 'node:timers/promises';
+import { callbackify, promisify } from 'node:util';
 
 interface Options {
   uri: string;
-  collectionName?: string;
+  collectionName?: string | undefined;
   /** Optionally specify a collection to use for locking. This is intended for
    * clusters with multiple nodes to ensure that not more than one migration
    * can run at any given time. You must use the `synchronizedMigration` or
    * `synchronizedUp` function, instead of triggering the migration via
    * `migrate` directly. */
-  lockCollectionName?: string;
+  lockCollectionName?: string | undefined;
 }
 
 export type MongoMigrationOptions = migrate.MigrationOptions & { stateStore: MongoStateStore };
@@ -18,7 +19,7 @@ export type MongoMigrationOptions = migrate.MigrationOptions & { stateStore: Mon
 export class MongoStateStore {
   private readonly collectionName: string;
   readonly mongodbHost: string;
-  readonly lockCollectionName?: string;
+  readonly lockCollectionName?: string | undefined;
 
   constructor(objectOrHost: Options | string) {
     this.mongodbHost = typeof objectOrHost === 'string' ? objectOrHost : objectOrHost.uri;
@@ -142,7 +143,7 @@ async function acquireLock(url: string, lockCollectionName: string): Promise<voi
         console.log('Waiting for migration lock release …');
         showMessage = false;
       }
-      await promisify(setTimeout)(100);
+      await setTimeout(100);
     }
   });
 }

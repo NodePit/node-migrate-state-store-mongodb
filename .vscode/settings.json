@@ -1,0 +1,10 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  // use the TypeScript pinned in devDependencies rather than the one bundled
+  // with the editor, so diagnostics match `lint:types`
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  // the path alone does not switch the editor over; this makes VS Code offer
+  // the workspace version, which then has to be accepted once
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
+}

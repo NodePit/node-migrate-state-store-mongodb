@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # keeps the actions in .github/workflows current, including those pinned to a commit
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

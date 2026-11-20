@@ -10,6 +10,7 @@ export default defineConfig({
       provider: 'v8',
       exclude: ['**/test/migrations/**']
     },
-    reporters: ['default', 'junit']
+    reporters: ['default', 'junit'],
+    outputFile: { junit: 'junit.xml' }
   }
 });
